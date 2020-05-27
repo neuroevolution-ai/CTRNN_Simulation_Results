@@ -30,7 +30,8 @@ def read_simulations(base_directory):
 
         plot_path = os.path.join(simulation_folder, 'plot.png')
         if os.path.isfile(plot_path):
-            plot_path = os.path.abspath(plot_path)
+            # plot_path = os.path.abspath(plot_path)
+            plot_path = "=HYPERLINK(\"" + plot_path + "\")"
         else:
             logging.warn("no plot found")
             plot_path = None
