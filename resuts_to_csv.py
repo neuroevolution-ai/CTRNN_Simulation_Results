@@ -81,13 +81,13 @@ def gather_info_for_csv(simulation):
 
     try:
         brain = conf["brain"]
-        trainer = conf["trainer"]
+        trainer = conf["optimizer"]
         episode_runner = conf["episode_runner"]
         del conf["brain"]
-        del conf["trainer"]
+        del conf["optimizer"]
         del conf["episode_runner"]
     except:
-        logging.warning("could not locate brain, trainer or ep_runner in conf.")
+        logging.warning("could not locate brain, optimizer or ep_runner in conf.")
         brain = {}
         trainer = {}
         episode_runner = {}
