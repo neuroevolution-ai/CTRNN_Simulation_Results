@@ -1,0 +1,105 @@
+environment: BipedalWalker-v3
+random_seed: 0
+number_generations: 50
+optimizer
+	type: MU_ES
+	population_size: 100
+	checkpoint_frequency: 0
+	initial_gene_range: 1
+	mate_indpb_1: 0.1
+	mate_indpb_2: 0.4
+	mutation_Gaussian_sigma_1: 1.0
+	mutation_Gaussian_sigma_2: 1.0
+	mutation_Gaussian_sigma_3: 5.0
+	mutation_Gaussian_indpb_1: 0.2
+	mutation_Gaussian_indpb_2: 0.05
+	mutation_Gaussian_indpb_3: 0.002
+	elitist_ratio: 0.0
+	tournsize: 5
+	mu: 0.1
+	lambda_: 0.9
+	mutpb: 0.5
+	include_parents_in_next_generation: True
+brain
+	type: CTRNN
+	number_neurons: 10
+	delta_t: 0.05
+	normalize_input: True
+	normalize_input_target: 20
+	optimize_state_boundaries: legacy
+	clipping_range_max: 1.0
+	clipping_range_min: -1.0
+	optimize_y0: False
+	set_principle_diagonal_elements_of_W_negative: False
+	w_mask: logarithmic
+	w_mask_param: 8
+	v_mask: logarithmic
+	v_mask_param: 8
+	t_mask: logarithmic
+	t_mask_param: 1.5
+	parameter_perturbations: 0.01
+episode_runner
+	keep_env_seed_fixed_during_generation: False
+	number_fitness_runs: 1
+	reuse_env: True
+
+Genome Size: 202
+Inputs: Box(24,)
+Outputs: 4
+
+--------------------------------------------------------------------------------
+gen     nevals      avg             std             min             max             
+--------------------------------------------------------------------------------
+0       190         -93.46          1.51            -96.66          -91.29          
+1       100         -92.16          0.69            -93.13          -91.37          
+2       100         -85.58          19.45           -92.91          -27.24          
+3       100         -92.26          0.31            -92.67          -91.67          
+4       100         -91.87          0.31            -92.42          -91.55          
+5       100         -77.29          31.42           -101.25         -14.70          
+6       100         -66.96          38.02           -92.01          -0.29           
+7       100         -59.21          40.10           -92.50          -5.25           
+8       100         -65.87          39.42           -92.02          -0.96           
+9       100         -57.84          44.05           -102.56         -0.67           
+10      100         -59.27          41.65           -100.63         -2.77           
+11      100         -21.27          35.39           -92.00          0.30            
+12      100         -10.07          27.08           -91.17          0.90            
+13      100         -2.43           1.81            -5.04           0.18            
+14      100         -1.05           1.40            -3.51           1.32            
+15      100         -2.85           1.72            -6.59           0.09            
+16      100         -11.00          29.82           -100.32         1.21            
+17      100         -1.64           1.39            -3.91           0.77            
+18      100         -1.49           1.34            -3.19           0.86            
+19      100         -20.56          39.29           -100.13         1.69            
+20      100         -11.76          28.90           -98.25          0.45            
+21      100         -20.83          38.08           -99.85          0.93            
+22      100         -19.93          39.42           -99.09          1.05            
+23      100         -10.63          27.84           -93.83          1.45            
+24      100         -10.88          27.22           -92.16          1.31            
+25      100         -10.99          27.10           -92.24          -0.09           
+26      100         -12.24          29.10           -99.30          1.99            
+27      100         -0.61           1.09            -3.32           1.27            
+28      100         -0.52           1.99            -6.27           0.78            
+29      100         -0.65           3.30            -10.20          1.16            
+30      100         -2.01           3.53            -11.12          0.83            
+31      100         -9.70           29.72           -98.83          1.32            
+32      100         0.28            1.14            -1.92           1.26            
+33      100         0.22            1.74            -3.71           1.50            
+34      100         0.66            1.07            -1.38           1.48            
+35      100         -11.46          28.68           -96.53          1.86            
+36      100         1.05            0.31            0.44            1.37            
+37      100         0.49            1.82            -4.09           2.16            
+38      100         0.56            1.43            -3.57           1.88            
+39      100         -19.11          39.09           -98.47          1.91            
+40      100         0.79            0.51            0.08            1.56            
+41      100         -28.81          44.71           -98.71          1.60            
+42      100         0.45            1.30            -2.81           1.54            
+43      100         -8.52           29.16           -95.98          1.92            
+44      100         -9.48           28.80           -95.76          1.49            
+45      100         -0.04           1.32            -3.71           1.23            
+46      100         0.05            2.50            -7.36           1.63            
+47      100         -20.32          39.95           -100.54         1.17            
+48      100         -18.69          38.99           -97.24          1.28            
+49      100         -0.84           2.54            -4.36           2.69            
+50      100         -17.54          39.84           -97.89          5.17            
+
+Time elapsed: 422.0159 seconds
