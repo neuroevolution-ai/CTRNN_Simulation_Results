@@ -1,0 +1,78 @@
+environment: Qbert-ram-v0
+random_seed: 0
+number_generations: 20
+optimizer
+	type: MU_ES
+	population_size: 400
+	novel_base: 20
+	checkpoint_frequency: 10
+	initial_gene_range: 2
+	mate_indpb: 0.3
+	mutation_Gaussian_sigma_1: 0.5
+	mutation_Gaussian_sigma_2: 2.0
+	mutation_Gaussian_indpb_1: 0.1
+	mutation_Gaussian_indpb_2: 0.007
+	elitist_ratio: 0.0
+	tournsize: 7
+	mu: 0.2
+	lambda_: 1.0
+	mutpb: 0.8
+	include_parents_in_next_generation: True
+	keep_seeds_fixed_during_generation: True
+	max_recorded_behaviors: 20
+	mutation_learned: True
+brain
+	type: CTRNN
+	number_neurons: 30
+	delta_t: 0.5
+	normalize_input: True
+	normalize_input_target: 5
+	optimize_state_boundaries: global
+	clipping_range_max: 1.0
+	clipping_range_min: -1.0
+	optimize_y0: True
+	set_principle_diagonal_elements_of_W_negative: True
+	v_mask: logarithmic
+	v_mask_param: 8
+	w_mask: logarithmic
+	w_mask_param: 4
+	t_mask: logarithmic
+	t_mask_param: 4
+	parameter_perturbations: 0.001
+episode_runner
+	keep_env_seed_fixed_during_generation: True
+	number_fitness_runs: 1
+	reuse_env: True
+	behavioral_interval: 1
+	behavioral_max_length: 500
+
+Genome Size: 964
+Inputs: Box(128,)
+Outputs: 6
+
+--------------------------------------------------------------------------------
+gen     nevals      avg             std             min             max             
+--------------------------------------------------------------------------------
+0       800         387.81          172.48          125.00          650.00          
+1       480         617.19          371.60          175.00          1500.00         
+2       480         1540.94         833.27          450.00          2500.00         
+3       480         2400.00         300.00          1500.00         2500.00         
+4       480         2662.50         1185.26         1500.00         10000.00        
+5       480         3037.50         1704.36         2500.00         9000.00         
+6       480         6112.50         3116.46         2500.00         9000.00         
+7       480         10831.25        2507.42         3000.00         14500.00        
+8       480         13750.00        1502.08         9000.00         15500.00        
+9       480         14462.50        153.60          13500.00        14500.00        
+10      480         14862.50        474.18          14500.00        15500.00        
+11      480         14918.75        184.45          14500.00        15000.00        
+12      480         15000.00        0.00            15000.00        15000.00        
+13      480         15500.00        0.00            15500.00        15500.00        
+14      480         15000.00        0.00            15000.00        15000.00        
+15      480         15500.00        0.00            15500.00        15500.00        
+16      480         15500.00        0.00            15500.00        15500.00        
+17      480         15000.00        0.00            15000.00        15000.00        
+18      480         15000.00        0.00            15000.00        15000.00        
+19      480         15500.00        0.00            15500.00        15500.00        
+20      480         15500.00        0.00            15500.00        15500.00        
+
+Time elapsed: 1.5022 seconds
