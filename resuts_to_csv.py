@@ -3,6 +3,7 @@ import json
 import argparse
 import logging
 import csv
+import pickle
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 
@@ -22,8 +23,12 @@ def read_simulations(base_directory):
 
         # noinspection PyBroadException
         try:
-            with open(os.path.join(simulation_folder, 'Log.json'), 'r') as read_file:
-                log = json.load(read_file)
+            try:
+                with open(os.path.join(simulation_folder, 'Log.pkl'), 'rb') as read_file_log:
+                    log = pickle.load(read_file_log)
+            except:
+                with open(os.path.join(simulation_folder, 'Log.json'), 'r') as read_file:
+                    log = json.load(read_file)
         except Exception:
             log = None
             logging.error("couldn't read log for " + str(simulation_folder), exc_info=True)
@@ -71,8 +76,11 @@ def gather_info_for_csv(simulation):
 
     if log:
         generations = [i for i in range(len(log))]
-        avg = [generation["avg"] for generation in log]
-        maximum = [generation["max"] for generation in log]
+        if hasattr(log, "chapters"):
+            min, avg, std, maximum = log.chapters["fitness"].select("min", "avg", "std", "max")
+        else:
+            avg = [generation["avg"] for generation in log]
+            maximum = [generation["max"] for generation in log]
     else:
         logging.warning("no log found in simulation on path: " + str(simulation["dir"]))
         generations = [-1]
