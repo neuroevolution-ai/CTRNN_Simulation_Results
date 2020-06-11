@@ -1,0 +1,113 @@
+environment: LunarLander-v2
+random_seed: 0
+number_generations: 50
+use_worker_processes: True
+optimizer
+	type: MU_ES
+	hof_size: 10
+	checkpoint_frequency: 0
+	initial_gene_range: 2
+	mate_indpb: 0.3
+	mutation_Gaussian_sigma_1: 0.1
+	mutation_Gaussian_sigma_2: 1.0
+	mutation_Gaussian_indpb_1: 0.1
+	mutation_Gaussian_indpb_2: 0.1
+	elitist_ratio: 0.05
+	tournsize: 5
+	mu: 10
+	mu_mixed: 5
+	mu_mixed_base: 15
+	mu_novel: 0
+	extra_from_hof: 1
+	lambda_: 250
+	mutpb: 0.5
+	include_parents_in_next_generation: True
+	keep_seeds_fixed_during_generation: True
+	mutation_learned: True
+	distance: NCD
+	max_recorded_behaviors: 5
+brain
+	type: CTRNN
+	number_neurons: 5
+	delta_t: 0.25
+	normalize_input: False
+	normalize_input_target: 1
+	optimize_state_boundaries: per_neuron
+	clipping_range_max: 1.0
+	clipping_range_min: -1.0
+	optimize_y0: False
+	set_principle_diagonal_elements_of_W_negative: False
+	w_mask: logarithmic
+	w_mask_param: 2
+	v_mask: logarithmic
+	v_mask_param: 2
+	t_mask: logarithmic
+	t_mask_param: 2
+	parameter_perturbations: 0.001
+episode_runner
+	keep_env_seed_fixed_during_generation: True
+	number_fitness_runs: 1
+	reuse_env: True
+	behavioral_interval: 1
+	behavioral_max_length: 3000
+
+Genome Size: 89
+Inputs: Box(8,)
+Outputs: 4
+
+--------------------------------------------------------------------------------
+gen     nevals      avg             std             min             max             
+--------------------------------------------------------------------------------
+0       265         -116.56         110.87          -470.00         -3.91           
+1       265         -86.61          61.66           -180.14         -15.90          
+2       265         -143.95         104.37          -486.59         -37.49          
+3       265         29.81           136.62          -162.56         265.27          
+4       265         -113.10         61.61           -218.67         -11.45          
+5       265         0.40            81.91           -58.57          231.90          
+6       265         -58.98          56.76           -218.29         14.06           
+7       265         -122.79         85.91           -290.01         -5.20           
+8       265         -19.84          31.03           -66.94          22.21           
+9       265         -84.87          44.82           -213.96         -24.25          
+10      265         -53.61          34.83           -124.35         -15.55          
+11      265         -69.25          109.94          -439.95         29.99           
+12      265         -9.56           75.97           -74.52          246.28          
+13      265         17.40           149.64          -383.23         271.68          
+14      265         7.89            178.55          -168.06         252.74          
+15      265         -65.23          34.89           -132.69         18.82           
+16      265         -49.61          33.40           -90.41          31.21           
+17      265         -47.93          39.03           -140.64         12.82           
+18      265         -25.68          21.15           -94.30          -2.57           
+19      265         -215.62         73.60           -274.91         -47.77          
+20      265         -93.69          126.30          -331.17         104.46          
+21      265         73.35           119.32          -96.65          261.72          
+22      265         -77.88          21.01           -106.32         -24.25          
+23      265         -11.93          15.52           -57.62          1.62            
+24      265         62.62           55.94           19.42           266.56          
+25      265         2.78            71.08           -67.59          255.63          
+26      265         -95.62          63.15           -246.23         -23.42          
+27      265         -57.89          35.73           -105.17         3.14            
+28      265         -59.60          55.08           -188.73         5.36            
+29      265         -218.97         38.37           -295.48         -174.99         
+30      265         -44.54          81.87           -237.25         47.35           
+31      265         125.38          104.83          -25.50          264.76          
+32      265         -66.66          46.10           -215.60         -11.59          
+33      265         85.98           105.70          -224.34         192.13          
+34      265         29.09           94.12           -122.81         183.66          
+35      265         -72.83          141.21          -257.52         252.05          
+36      265         29.99           132.66          -92.30          258.69          
+37      265         -10.93          35.87           -83.59          64.41           
+38      265         -60.33          31.58           -120.35         -5.60           
+39      265         -99.46          67.46           -187.57         -13.61          
+40      265         -50.13          12.28           -75.85          -29.68          
+41      265         -84.58          14.30           -115.10         -72.05          
+42      265         -129.57         12.49           -157.18         -112.15         
+43      265         -34.94          56.60           -237.60         9.36            
+44      265         -105.92         97.45           -269.23         -0.44           
+45      265         81.18           156.89          -236.61         236.78          
+46      265         -204.42         129.08          -405.81         -43.98          
+47      265         -189.94         33.18           -226.16         -131.63         
+48      265         30.30           110.80          -135.73         242.64          
+49      265         -53.10          54.19           -221.87         -11.98          
+50      265         -155.24         54.43           -204.36         -64.06          
+
+Time elapsed: 81.5827 seconds
