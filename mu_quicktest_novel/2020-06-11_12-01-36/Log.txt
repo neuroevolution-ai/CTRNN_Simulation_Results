@@ -1,0 +1,113 @@
+environment: LunarLander-v2
+random_seed: 0
+number_generations: 50
+use_worker_processes: True
+optimizer
+	type: MU_ES
+	hof_size: 10
+	checkpoint_frequency: 0
+	initial_gene_range: 2
+	mate_indpb: 0.3
+	mutation_Gaussian_sigma_1: 1.0
+	mutation_Gaussian_sigma_2: 0.0
+	mutation_Gaussian_indpb_1: 0.01
+	mutation_Gaussian_indpb_2: 0.01
+	elitist_ratio: 0.1
+	tournsize: 5
+	mu: 10
+	mu_mixed: 10
+	mu_mixed_base: 30
+	mu_novel: 10
+	extra_from_hof: 0
+	lambda_: 250
+	mutpb: 0.9
+	include_parents_in_next_generation: True
+	keep_seeds_fixed_during_generation: True
+	mutation_learned: False
+	distance: NCD
+	max_recorded_behaviors: 25
+brain
+	type: CTRNN
+	number_neurons: 5
+	delta_t: 0.5
+	normalize_input: True
+	normalize_input_target: 10
+	optimize_state_boundaries: legacy
+	clipping_range_max: 1.0
+	clipping_range_min: -1.0
+	optimize_y0: False
+	set_principle_diagonal_elements_of_W_negative: True
+	w_mask: logarithmic
+	w_mask_param: 2
+	v_mask: logarithmic
+	v_mask_param: 2
+	t_mask: logarithmic
+	t_mask_param: 2
+	parameter_perturbations: 0.01
+episode_runner
+	keep_env_seed_fixed_during_generation: True
+	number_fitness_runs: 3
+	reuse_env: True
+	behavioral_interval: 1
+	behavioral_max_length: 3000
+
+Genome Size: 89
+Inputs: Box(8,)
+Outputs: 4
+
+--------------------------------------------------------------------------------
+gen     nevals      avg             std             min             max             
+--------------------------------------------------------------------------------
+0       280         -330.16         208.00          -713.83         -129.02         
+1       280         -165.85         130.27          -548.26         24.76           
+2       280         -163.51         86.45           -371.23         -11.72          
+3       280         -135.12         32.11           -188.53         -75.68          
+4       280         -147.01         91.55           -347.84         -15.97          
+5       280         -149.88         56.08           -327.46         -69.10          
+6       280         -131.87         105.59          -406.79         -22.05          
+7       280         -157.04         104.95          -462.58         -20.51          
+8       280         -70.09          72.65           -378.21         -23.52          
+9       280         -75.31          64.13           -238.77         21.84           
+10      280         -35.03          46.66           -117.05         27.29           
+11      280         -74.03          71.91           -257.86         27.12           
+12      280         -64.11          75.50           -210.94         78.20           
+13      280         -54.31          53.29           -232.05         41.67           
+14      280         -36.80          34.93           -169.00         -10.72          
+15      280         -75.43          75.13           -360.70         20.46           
+16      280         -48.36          29.70           -136.83         -2.04           
+17      280         -81.86          51.62           -220.80         -26.13          
+18      280         -116.01         60.46           -170.56         43.12           
+19      280         -57.90          43.65           -124.35         19.68           
+20      280         -32.47          65.43           -178.42         65.00           
+21      280         34.57           84.33           -107.57         121.14          
+22      280         2.14            55.25           -143.81         66.32           
+23      280         24.50           48.00           -16.35          139.47          
+24      280         -1.36           18.17           -32.13          27.49           
+25      280         4.29            26.37           -45.80          78.71           
+26      280         30.49           18.01           -15.40          60.95           
+27      280         4.96            25.97           -52.66          63.19           
+28      280         6.65            30.42           -50.75          56.80           
+29      280         17.83           38.66           -83.54          73.47           
+30      280         -34.68          33.21           -103.00         28.26           
+31      280         45.78           35.78           -66.79          92.44           
+32      280         -14.43          49.02           -218.39         73.88           
+33      280         11.86           28.17           -102.07         47.76           
+34      280         16.62           22.95           -50.20          79.76           
+35      280         16.09           19.00           -43.73          61.69           
+36      280         -10.49          21.78           -62.25          44.04           
+37      280         -4.68           51.81           -133.38         90.07           
+38      280         47.16           25.72           -45.22          93.24           
+39      280         -10.60          33.58           -133.85         32.45           
+40      280         54.52           71.13           -209.33         164.03          
+41      280         25.92           32.56           -42.91          85.78           
+42      280         70.59           31.25           9.29            169.35          
+43      280         11.10           23.75           -48.13          53.86           
+44      280         51.44           26.85           -12.29          114.90          
+45      280         64.15           32.37           -3.84           134.68          
+46      280         -0.24           32.11           -102.01         46.50           
+47      280         55.37           47.08           -58.84          136.84          
+48      280         52.62           39.12           -15.26          128.42          
+49      280         76.87           32.17           13.23           132.49          
+50      280         46.20           35.15           -53.63          132.30          
+
+Time elapsed: 1361.9361 seconds

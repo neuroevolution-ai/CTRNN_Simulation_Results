@@ -1,0 +1,113 @@
+environment: LunarLander-v2
+random_seed: 0
+number_generations: 50
+use_worker_processes: True
+optimizer
+	type: MU_ES
+	hof_size: 10
+	checkpoint_frequency: 0
+	initial_gene_range: 2
+	mate_indpb: 0.3
+	mutation_Gaussian_sigma_1: 0.1
+	mutation_Gaussian_sigma_2: 0.0
+	mutation_Gaussian_indpb_1: 0.01
+	mutation_Gaussian_indpb_2: 0.01
+	elitist_ratio: 0.1
+	tournsize: 5
+	mu: 5
+	mu_mixed: 10
+	mu_mixed_base: 15
+	mu_novel: 5
+	extra_from_hof: 0
+	lambda_: 250
+	mutpb: 0.8
+	include_parents_in_next_generation: True
+	keep_seeds_fixed_during_generation: True
+	mutation_learned: False
+	distance: NCD
+	max_recorded_behaviors: 10
+brain
+	type: CTRNN
+	number_neurons: 5
+	delta_t: 0.25
+	normalize_input: False
+	normalize_input_target: 1
+	optimize_state_boundaries: fixed
+	clipping_range_max: 1.0
+	clipping_range_min: -1.0
+	optimize_y0: False
+	set_principle_diagonal_elements_of_W_negative: True
+	w_mask: logarithmic
+	w_mask_param: 2
+	v_mask: logarithmic
+	v_mask_param: 2
+	t_mask: logarithmic
+	t_mask_param: 2
+	parameter_perturbations: 0.0
+episode_runner
+	keep_env_seed_fixed_during_generation: True
+	number_fitness_runs: 3
+	reuse_env: True
+	behavioral_interval: 1
+	behavioral_max_length: 3000
+
+Genome Size: 79
+Inputs: Box(8,)
+Outputs: 4
+
+--------------------------------------------------------------------------------
+gen     nevals      avg             std             min             max             
+--------------------------------------------------------------------------------
+0       270         -257.68         218.82          -816.84         -57.71          
+1       270         -219.59         168.41          -654.43         -78.46          
+2       270         -234.02         147.25          -787.60         -74.53          
+3       270         -96.70          64.36           -236.36         -46.06          
+4       270         -104.58         98.91           -397.53         -53.35          
+5       270         -140.17         111.85          -403.12         -4.75           
+6       270         -112.25         91.12           -378.19         -4.65           
+7       270         -16.94          107.45          -369.41         107.31          
+8       270         -7.33           36.72           -156.28         42.21           
+9       270         -7.86           85.46           -342.66         77.32           
+10      270         54.38           51.62           -91.72          129.23          
+11      270         -8.65           40.50           -85.95          112.52          
+12      270         5.29            41.23           -79.34          40.34           
+13      270         -8.08           42.44           -105.87         24.36           
+14      270         17.35           35.93           -33.61          71.05           
+15      270         -12.41          67.30           -115.02         96.33           
+16      270         -7.77           17.67           -44.82          18.91           
+17      270         -12.87          71.35           -107.46         88.80           
+18      270         49.84           33.05           -71.37          81.56           
+19      270         49.36           50.90           -61.16          134.39          
+20      270         32.27           28.72           -34.30          72.35           
+21      270         14.69           50.72           -95.02          81.03           
+22      270         20.91           65.13           -88.57          107.74          
+23      270         -30.11          50.24           -102.17         56.06           
+24      270         53.93           46.81           -78.14          128.63          
+25      270         59.67           40.62           -32.22          105.24          
+26      270         46.63           45.90           -76.53          145.15          
+27      270         135.51          20.30           94.20           158.71          
+28      270         133.94          53.54           10.01           163.12          
+29      270         65.81           61.31           -36.78          147.58          
+30      270         12.07           43.12           -74.47          67.04           
+31      270         63.41           66.05           -43.90          134.16          
+32      270         31.72           44.25           -21.49          123.97          
+33      270         104.36          65.08           -30.35          156.73          
+34      270         106.25          32.66           73.92           162.05          
+35      270         117.35          62.16           24.92           228.85          
+36      270         58.74           32.87           27.84           124.30          
+37      270         168.92          85.83           -45.23          222.38          
+38      270         163.63          77.97           -30.12          215.00          
+39      270         135.63          41.09           21.20           229.21          
+40      270         66.80           31.40           43.65           123.47          
+41      270         36.44           37.26           -32.58          63.19           
+42      270         75.83           26.17           48.27           144.25          
+43      270         132.80          81.51           -34.98          201.32          
+44      270         151.27          52.07           6.27            200.34          
+45      270         102.46          52.30           -9.06           166.97          
+46      270         63.60           37.24           -40.59          98.81           
+47      270         45.99           33.64           -8.54           89.89           
+48      270         67.39           56.99           -72.76          140.39          
+49      270         69.03           42.44           -10.68          133.68          
+50      270         98.22           62.51           -33.34          218.88          
+
+Time elapsed: 329.9058 seconds

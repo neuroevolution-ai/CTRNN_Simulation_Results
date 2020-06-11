@@ -1,0 +1,113 @@
+environment: LunarLander-v2
+random_seed: 0
+number_generations: 50
+use_worker_processes: True
+optimizer
+	type: MU_ES
+	hof_size: 10
+	checkpoint_frequency: 0
+	initial_gene_range: 2
+	mate_indpb: 0.3
+	mutation_Gaussian_sigma_1: 0.1
+	mutation_Gaussian_sigma_2: 0.0
+	mutation_Gaussian_indpb_1: 0.01
+	mutation_Gaussian_indpb_2: 0.01
+	elitist_ratio: 0.2
+	tournsize: 5
+	mu: 10
+	mu_mixed: 10
+	mu_mixed_base: 30
+	mu_novel: 5
+	extra_from_hof: 1
+	lambda_: 250
+	mutpb: 0.8
+	include_parents_in_next_generation: True
+	keep_seeds_fixed_during_generation: True
+	mutation_learned: True
+	distance: NCD
+	max_recorded_behaviors: 5
+brain
+	type: CTRNN
+	number_neurons: 7
+	delta_t: 1.0
+	normalize_input: True
+	normalize_input_target: 10
+	optimize_state_boundaries: fixed
+	clipping_range_max: 1.0
+	clipping_range_min: -1.0
+	optimize_y0: True
+	set_principle_diagonal_elements_of_W_negative: True
+	w_mask: logarithmic
+	w_mask_param: 2
+	v_mask: logarithmic
+	v_mask_param: 2
+	t_mask: logarithmic
+	t_mask_param: 2
+	parameter_perturbations: 0.1
+episode_runner
+	keep_env_seed_fixed_during_generation: True
+	number_fitness_runs: 1
+	reuse_env: True
+	behavioral_interval: 1
+	behavioral_max_length: 3000
+
+Genome Size: 124
+Inputs: Box(8,)
+Outputs: 4
+
+--------------------------------------------------------------------------------
+gen     nevals      avg             std             min             max             
+--------------------------------------------------------------------------------
+0       275         -206.15         160.60          -737.96         -57.36          
+1       275         -101.87         81.81           -452.52         -3.81           
+2       275         -83.69          56.90           -271.50         -18.09          
+3       275         -73.70          71.83           -268.59         68.51           
+4       275         -116.51         57.72           -291.38         4.48            
+5       275         -44.16          61.85           -299.17         32.96           
+6       275         -66.87          69.87           -316.29         6.42            
+7       275         -46.98          161.02          -688.02         42.93           
+8       275         -33.87          74.01           -349.74         16.23           
+9       275         -36.59          76.92           -344.86         15.75           
+10      275         -33.25          129.00          -597.65         44.80           
+11      275         197.90          93.56           -209.73         224.59          
+12      275         -53.84          31.60           -132.94         3.95            
+13      275         109.77          120.31          -188.22         240.37          
+14      275         -26.54          89.60           -324.53         37.54           
+15      275         -42.78          86.00           -426.22         32.06           
+16      275         -7.29           31.47           -151.65         22.81           
+17      275         160.13          53.64           -87.36          194.48          
+18      275         42.05           124.67          -231.40         218.54          
+19      275         3.60            15.24           -62.66          13.77           
+20      275         192.15          131.08          -58.43          274.06          
+21      275         106.66          116.49          -101.37         230.47          
+22      275         192.53          52.53           14.55           211.58          
+23      275         -12.87          8.89            -34.50          5.98            
+24      275         -31.08          30.11           -89.78          3.35            
+25      275         70.25           91.07           22.05           274.84          
+26      275         132.19          100.43          30.57           262.63          
+27      275         210.07          90.18           -85.24          259.32          
+28      275         106.64          106.32          -98.11          224.38          
+29      275         10.28           69.86           -227.56         199.00          
+30      275         86.36           121.13          -146.74         227.46          
+31      275         180.86          124.55          -183.24         255.35          
+32      275         -2.24           56.18           -193.18         41.48           
+33      275         110.95          84.25           -245.30         163.25          
+34      275         51.86           82.02           -0.34           190.57          
+35      275         189.07          82.14           15.52           242.56          
+36      275         180.91          58.03           -12.85          203.76          
+37      275         201.86          8.35            172.07          204.32          
+38      275         -60.17          99.32           -192.07         170.98          
+39      275         87.08           130.32          -175.44         209.19          
+40      275         6.81            76.22           -43.70          210.08          
+41      275         163.01          80.12           -26.30          214.81          
+42      275         -156.68         88.61           -225.27         16.64           
+43      275         12.80           50.70           -192.32         71.33           
+44      275         62.76           44.88           24.68           211.10          
+45      275         -7.46           78.60           -293.76         42.79           
+46      275         -87.79          72.18           -361.72         -17.17          
+47      275         155.06          41.46           20.58           194.60          
+48      275         174.48          33.26           127.45          205.20          
+49      275         189.44          17.05           163.17          214.54          
+50      275         124.81          159.89          -411.61         238.55          
+
+Time elapsed: 134.5854 seconds
