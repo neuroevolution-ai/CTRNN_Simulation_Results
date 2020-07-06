@@ -79,8 +79,14 @@ def gather_info_for_csv(simulation):
         if hasattr(log, "chapters"):
             min, avg, std, maximum = log.chapters["fitness"].select("min", "avg", "std", "max")
         else:
-            avg = [generation["avg"] for generation in log]
-            maximum = [generation["max"] for generation in log]
+            try:
+                avg = [generation["avg"] for generation in log]
+                maximum = [generation["max"] for generation in log]
+            except:
+                generations = [-1]
+                avg = [0]
+                maximum = [0]
+                logging.warning("couldn't read avg and max from log")
     else:
         logging.warning("no log found in simulation on path: " + str(simulation["dir"]))
         generations = [-1]
