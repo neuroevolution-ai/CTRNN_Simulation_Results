@@ -1,0 +1,74 @@
+environment: QbertNoFrameskip-v4
+random_seed: 0
+number_generations: 10
+use_worker_processes: True
+optimizer
+	type: MU_ES
+	hof_size: 10
+	extra_from_hof: 5
+	checkpoint_frequency: 10
+	initial_gene_range: 2
+	tournsize: 15
+	mu: 30
+	lambda_: 300
+	mutpb: 0.8
+novelty
+	behavior_from_observation: True
+	distance: NCD
+	max_recorded_behaviors: 30
+	recorded_behaviors_per_generation: 2
+	novelty_nearest_k: 5
+	novelty_weight: 1.0
+	behavioral_interval: 5
+	behavioral_max_length: 100
+brain
+	type: CTRNN
+	number_neurons: 30
+	delta_t: 0.5
+	normalize_input: False
+	normalize_input_target: 5
+	optimize_state_boundaries: global
+	clipping_range_max: 1.0
+	clipping_range_min: -1.0
+	optimize_y0: True
+	set_principle_diagonal_elements_of_W_negative: True
+	v_mask: logarithmic
+	v_mask_param: 8
+	w_mask: logarithmic
+	w_mask_param: 4
+	t_mask: logarithmic
+	t_mask_param: 4
+	parameter_perturbations: 0.001
+	neuron_activation: relu
+	neuron_activation_inplace: False
+	use_bias: True
+episode_runner
+	keep_env_seed_fixed_during_generation: True
+	number_fitness_runs: 1
+	reuse_env: True
+	type: Standard
+	max_steps_per_run: 0
+	max_steps_penalty: 0
+
+Genome Size: 1630
+Inputs: Box(16, 16)
+Outputs: Discrete(6)
+Commit: 5f333b97b4be95edc088fee90a053c674cae9123
+
+
+--------------------------------------------------------------------------------
+gen     nevals      avg             std             min             max             
+--------------------------------------------------------------------------------
+0       332         23.33           48.28           0.00            150.00          
+1       334         624.17          1365.08         0.00            4500.00         
+2       336         1393.33         3126.98         0.00            14000.00        
+3       338         3905.00         5738.30         0.00            18000.00        
+4       340         6653.33         6237.67         0.00            18000.00        
+5       342         13716.67        5105.04         2000.00         18000.00        
+6       344         15735.00        3364.75         6500.00         19000.00        
+7       346         18233.33        863.46          14500.00        19500.00        
+8       348         17600.00        2343.07         5000.00         18500.00        
+9       350         18216.67        2275.53         6500.00         19500.00        
+10      352         17616.67        1909.12         8500.00         19500.00        
+
+Time elapsed: 1.6450 seconds
