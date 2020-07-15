@@ -1,0 +1,28 @@
+{
+    "environment": "HopperBulletEnv-v0",
+    "random_seed": 0,
+    "number_generations": 100,
+    "use_worker_processes": true,
+    "optimizer": {
+        "type": "CMA_ES",
+        "population_size": 100,
+        "sigma": 1.0,
+        "checkpoint_frequency": 10,
+        "hof_size": 5
+    },
+    "brain": {
+        "type": "LSTM_NumPy",
+        "normalize_input": false,
+        "normalize_input_target": 5,
+        "lstm_num_layers": 1,
+        "use_biases": true
+    },
+    "episode_runner": {
+        "type": "Visualize",
+        "keep_env_seed_fixed_during_generation": false,
+        "number_fitness_runs": 20,
+        "reuse_env": true,
+        "max_steps_per_run": 0,
+        "max_steps_penalty": 0
+    }
+}
