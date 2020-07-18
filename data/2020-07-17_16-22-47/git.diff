@@ -1,0 +1,13 @@
+diff --git a/neuro_evolution_ctrnn/tools/episode_runner.py b/neuro_evolution_ctrnn/tools/episode_runner.py
+index bf832c5..7fd8c03 100644
+--- a/neuro_evolution_ctrnn/tools/episode_runner.py
++++ b/neuro_evolution_ctrnn/tools/episode_runner.py
+@@ -98,7 +98,7 @@ class EpisodeRunner(IEpisodeRunner):
+             if callable(env.get_compressed_behavior):
+                 compressed_behavior = env.get_compressed_behavior()
+ 
+-        return fitness_total , compressed_behavior, steps_total
++        return fitness_total / number_fitness_runs, compressed_behavior, steps_total
+ 
+ 
+ class MemoryEpisodeRunner(IEpisodeRunner):
