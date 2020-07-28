@@ -32,8 +32,10 @@ with open(args.csv, 'r') as f:
     data = list(reader)
 
 # test = np.column_stack((mavg, sigma, mu))
-mus = [[], [], [], []]
-sigmas = [[], [], []]
+mus05 = [[], [], [], []]
+mus10 = [[], [], [], []]
+mus20 = [[], [], [], []]
+
 
 for line in data:
 
@@ -56,25 +58,25 @@ for line in data:
         logging.debug("skip, v_mask_param " + line['v_mask_param'])
         continue
 
+    if line["sigma"] == "0.5":
+        mus = mus05
+    elif line["sigma"] == "1.0":
+        mus = mus10
+    elif line["sigma"] == "2.0":
+        mus = mus20
+    else:
+        logging.warn("unknown sigma: " + line["sigma"])
     if line["mu"] == "0":
-        mus[0].append(v)
-    elif line["mu"] == "5":
-        mus[1].append(v)
-    elif line["mu"] == "20":
-        mus[2].append(v)
-    elif line["mu"] == "80":
         mus[3].append(v)
+    elif line["mu"] == "5":
+        mus[0].append(v)
+    elif line["mu"] == "20":
+        mus[1].append(v)
+    elif line["mu"] == "80":
+        mus[2].append(v)
     else:
         logging.warn("unknown mu: " + line["mu"])
 
-    if line["sigma"] == "0.5":
-        sigmas[0].append(v)
-    elif line["sigma"] == "1.0":
-        sigmas[1].append(v)
-    elif line["sigma"] == "2.0":
-        sigmas[2].append(v)
-    else:
-        logging.warn("unknown sigma: " + line["sigma"])
 
 mavg_norm = norm(np.array(mavg))
 max_norm = norm(np.array(mmax))
@@ -86,22 +88,28 @@ for i in range(count):
 widths = 0.8
 quantile = [0.2, 0.8]
 # plt.hist(x=test, bins=5, density=True,)
-fig, axs = plt.subplots(2)
-ax = axs[0]
-ax.violinplot(mus, positions=[4, 1, 2, 3], showmeans=True, widths=widths)
+fig, axs = plt.subplots(3)
 
-ax.set_xlabel("mu")
-ax.set_ylabel("mavg")
-ax.legend(loc='best')
-plt.sca(axs[0])
-plt.xticks(np.arange(4) + 1, ('5', '20', '80', '250'))
+def violinplot(data,ax, title):
+    ax.violinplot(data, positions=[1, 2, 3, 4], widths=widths)
+    for idx, d in enumerate( data):
+        count = len(d)
+        plt.annotate("n="+str(len(d)), (idx+0.88,200), annotation_clip=False)
+    ax.set_xlabel("mu")
+    ax.set_ylabel("mavg")
+    ax.legend(loc='best')
+    plt.sca(ax)
+    plt.xticks(np.arange(4) + 1, ('5', '20', '80', '250'))
+    plt.title(title)
+    plt.ylim(-200,+200)
 
-ax = axs[1]
-ax.violinplot(sigmas, positions=[1,2,3], showmeans=True,widths=widths)
+    plt.yticks( range(-200,201,100))
+    plt.grid(axis='y')
 
-ax.set_xlabel("sigma")
-ax.set_ylabel("mavg")
-plt.sca(axs[1])
-plt.xticks(np.arange(3) + 1, ('0.5', '1.0', '2.0'))
+
+
+violinplot(mus05,axs[0], "sigma=0.5")
+violinplot(mus10,axs[1], "sigma=1.0")
+violinplot(mus20,axs[2], "sigma=2.0")
 
 fig.show()
