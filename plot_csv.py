@@ -106,10 +106,34 @@ def violinplot(data,ax, title):
     plt.yticks( range(-200,201,100))
     plt.grid(axis='y')
 
+def histplot(data,ax,title):
+    plt.sca(ax)
+    colors=[
+        (0.5,0.0,0.0),
+        (0.5,0.3,0.3),
+        (0.5,.6,0.6),
+        (0.5,0.9,0.9),
+    ]
+    plt.hist(x=data,density=False,
+             bins=5,
+             range=(-250,250),
+             cumulative=False,
+             histtype='bar',
+             label=('5', '20', '80', '250'),
+             color=colors)
+
+    plt.title(title)
+    plt.legend(loc='best')
+
+    plt.xlim(-150,+150)
 
 
-violinplot(mus05,axs[0], "sigma=0.5")
-violinplot(mus10,axs[1], "sigma=1.0")
-violinplot(mus20,axs[2], "sigma=2.0")
+histplot(mus05,axs[0], "sigma=0.5")
+histplot(mus10,axs[1], "sigma=1.0")
+histplot(mus20,axs[2], "sigma=2.0")
+
+#violinplot(mus05,axs[0], "sigma=0.5")
+#violinplot(mus10,axs[1], "sigma=1.0")
+#violinplot(mus20,axs[2], "sigma=2.0")
 
 fig.show()
