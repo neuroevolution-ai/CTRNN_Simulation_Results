@@ -12,6 +12,11 @@ logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 
 parser = argparse.ArgumentParser(description='Visualize experiment results')
 parser.add_argument('--csv', type=str, help='location of csv file', default='output.csv')
+parser.add_argument('--savefig',
+                    type=str,
+                    help='save figure? Requires xelatex to be installed. '
+                         '(sudo apt-get install texlive-xetex )',
+                    default='')
 args = parser.parse_args()
 
 
@@ -19,104 +24,44 @@ def norm(x):
     return (x - min(x)) / (max(x) - min(x))
 
 
-count = -1
-sigma = []
-mavg = []
-delta = []
-mu = []
-mmax = []
-with open(args.csv, 'r') as f:
-    reader = csv.DictReader(f)
-
-    print(reader.fieldnames)
-    data = list(reader)
-
-# test = np.column_stack((mavg, sigma, mu))
-mus05 = [[], [], [], []]
-mus10 = [[], [], [], []]
-mus20 = [[], [], [], []]
+def split_into_buckets(data, property):
+    property_values = set([e[property] for e in data])
+    result = []
+    for property_value in property_values:
+        res = [e for e in data if e[property] == property_value]
+        result.append((property_value, res))
+    return result
 
 
-for line in data:
-
-    sigma.append(float(line["sigma"]))
-    mu.append(float(line["mu"]))
-    v = float(line["mavg"])
-    mavg.append(v)
-    mmax.append(float(line["max"]))
-    count += 1
-
-    if line['number_fitness_runs'] == '0':
-        logging.debug("skip, number_fitness_runs " + line['number_fitness_runs'])
-        continue
-
-    if line['t_mask_param'] == '95':
-        logging.debug("skip, t_mask_param " + line['t_mask_param'])
-        continue
-
-    if line['v_mask_param'] == '95':
-        logging.debug("skip, v_mask_param " + line['v_mask_param'])
-        continue
-
-    if line["sigma"] == "0.5":
-        mus = mus05
-    elif line["sigma"] == "1.0":
-        mus = mus10
-    elif line["sigma"] == "2.0":
-        mus = mus20
-    else:
-        logging.warn("unknown sigma: " + line["sigma"])
-    if line["mu"] == "0":
-        mus[3].append(v)
-    elif line["mu"] == "5":
-        mus[0].append(v)
-    elif line["mu"] == "20":
-        mus[1].append(v)
-    elif line["mu"] == "80":
-        mus[2].append(v)
-    else:
-        logging.warn("unknown mu: " + line["mu"])
-
-
-mavg_norm = norm(np.array(mavg))
-max_norm = norm(np.array(mmax))
-
-for i in range(count):
-    c = (0, 0, mavg_norm[i])
-    t = "o"
-
-widths = 0.8
-quantile = [0.2, 0.8]
-# plt.hist(x=test, bins=5, density=True,)
-fig, axs = plt.subplots(3)
-
-def violinplot(data,ax, title):
-    ax.violinplot(data, positions=[1, 2, 3, 4], widths=widths)
-    for idx, d in enumerate( data):
-        count = len(d)
-        plt.annotate("n="+str(len(d)), (idx+0.88,200), annotation_clip=False)
-    ax.set_xlabel("mu")
-    ax.set_ylabel("mavg")
-    ax.legend(loc='best')
+def violinplot(data, ax, title, prop_name):
     plt.sca(ax)
-    plt.xticks(np.arange(4) + 1, ('5', '20', '80', '250'))
-    plt.title(title)
-    plt.ylim(-200,+200)
-
-    plt.yticks( range(-200,201,100))
+    pure_data = [x[1] for x in data]
+    values = [[float(y['mavg']) for y in x] for x in pure_data]
+    labels = [x[0] for x in data]
+    positions = range(len(values))
+    ax.violinplot(values, positions=positions, widths=0.7)
+    for v,p in zip(values, positions):
+        plt.annotate("n=" + str(len(v)), (p-0.1, 200), annotation_clip=False)
+    ax.set_xlabel(prop_name)
+    ax.legend(loc='best')
+    plt.xticks(np.arange(len(labels)), labels)
+    ax.set_ylabel("mavg")
+    plt.ylim(-200, +200)
+    plt.yticks(range(-200, 201, 100))
     plt.grid(axis='y')
 
-def histplot(data,ax,title):
+
+def histplot(data, ax, title):
     plt.sca(ax)
-    colors=[
-        (0.5,0.0,0.0),
-        (0.5,0.3,0.3),
-        (0.5,.6,0.6),
-        (0.5,0.9,0.9),
+    colors = [
+        (0.5, 0.0, 0.0),
+        (0.5, 0.3, 0.3),
+        (0.5, .6, 0.6),
+        (0.5, 0.9, 0.9),
     ]
-    plt.hist(x=data,density=False,
+    plt.hist(x=data, density=False,
              bins=5,
-             range=(-250,250),
+             range=(-250, 250),
              cumulative=False,
              histtype='bar',
              label=('5', '20', '80', '250'),
@@ -125,15 +70,64 @@ def histplot(data,ax,title):
     plt.title(title)
     plt.legend(loc='best')
 
-    plt.xlim(-150,+150)
+    plt.xlim(-150, +150)
 
 
-histplot(mus05,axs[0], "sigma=0.5")
-histplot(mus10,axs[1], "sigma=1.0")
-histplot(mus20,axs[2], "sigma=2.0")
+def read_data(file):
 
-#violinplot(mus05,axs[0], "sigma=0.5")
-#violinplot(mus10,axs[1], "sigma=1.0")
-#violinplot(mus20,axs[2], "sigma=2.0")
+    with open(file, 'r') as f:
+        reader = csv.DictReader(f)
+        print(reader.fieldnames)
+        data = list(reader)
+
+    for d in data:
+        d['mu'] = int(d['mu'])
+        d['mavg'] = float(d['mavg'])
+        d['max'] = float(d['max'])
+        d['delta_t'] = float(d['delta_t'])
+        d['sigma'] = float(d['sigma'])
+        d['population_size'] = float(d['population_size'])
+        d['number_generations'] = int(d['number_generations'])
+        d['v_mask_param'] = int(d['v_mask_param'])
+        d['w_mask_param'] = int(d['w_mask_param'])
+        d['t_mask_param'] = int(d['t_mask_param'])
+        d['number_fitness_runs'] = int(d['number_fitness_runs'])
+        if d['mu'] == 0:
+            # when 0 is used, it defaults to half the population
+            d['mu'] = int(d['population_size']/2)
+    return data
+
+def split_and_plot(axis, data, property):
+    splitted = split_into_buckets(data, property)
+    splitted = sorted(splitted, key=lambda x: x[0])
+    all = []
+    for x in splitted: all.append(x)
+    violinplot(splitted,axis, "asd", property)
+
+def plot_all(axis, data):
+    # draw entire population
+    values = [d['mavg'] for d in data]
+    axis.set_ylabel("mavg")
+    plt.ylim(-200, +200)
+    axis.violinplot(values, widths=0.3)
+    plt.tick_params(
+        axis='x',
+        which='both',
+        bottom=False,
+        top=False,
+        labelbottom=False)
+    plt.yticks(range(-200, 201, 100))
+    plt.grid(axis='y')
+
+
+data = read_data(args.csv)
+fig, axes = plt.subplots(1)
+# plot_all(axes[0], data)
+# split_and_plot(axes[0], data, 'number_fitness_runs')
+# split_and_plot(axes[1], data, 'sigma')
+fig.set_size_inches(6, 3)
+split_and_plot(axes, data, 'mu')
+if args.savefig:
+    fig.savefig(args.savefig)
 
 fig.show()
