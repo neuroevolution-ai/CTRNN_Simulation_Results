@@ -7,6 +7,8 @@ import pickle
 import numpy as np
 
 import matplotlib.pyplot as plt
+import matplotlib
+import tikzplotlib
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 
@@ -39,38 +41,20 @@ def violinplot(data, ax, title, prop_name):
     values = [[float(y['mavg']) for y in x] for x in pure_data]
     labels = [x[0] for x in data]
     positions = range(len(values))
-    ax.violinplot(values, positions=positions, widths=0.7)
+    ax.violinplot(values, positions=positions, widths=0.7, showmedians=True, vert=False)
     for v,p in zip(values, positions):
-        plt.annotate("n=" + str(len(v)), (p-0.1, 200), annotation_clip=False)
-    ax.set_xlabel(prop_name)
+        # plt.annotate("n=" + str(len(v)), (p-0.1, 178), annotation_clip=False)
+        # plt.text(200, (p/len(positions))+0.1, "n=" + str(len(v)), transform=ax.get_xaxis_transform())
+        plt.text(max(v)+5, p-0.1, "\scriptsize n=" + str(len(v)), fontsize=6)
+        ax.scatter(x=v, y=[p]*len(v), s=[100]*len(v), marker="|", color='#ff9900', alpha=0.3)
+
+    ax.set_ylabel(prop_name.replace('_', ' '))
     ax.legend(loc='best')
-    plt.xticks(np.arange(len(labels)), labels)
-    ax.set_ylabel("mavg")
-    plt.ylim(-200, +200)
-    plt.yticks(range(-200, 201, 100))
-    plt.grid(axis='y')
-
-
-def histplot(data, ax, title):
-    plt.sca(ax)
-    colors = [
-        (0.5, 0.0, 0.0),
-        (0.5, 0.3, 0.3),
-        (0.5, .6, 0.6),
-        (0.5, 0.9, 0.9),
-    ]
-    plt.hist(x=data, density=False,
-             bins=5,
-             range=(-250, 250),
-             cumulative=False,
-             histtype='bar',
-             label=('5', '20', '80', '250'),
-             color=colors)
-
-    plt.title(title)
-    plt.legend(loc='best')
-
-    plt.xlim(-150, +150)
+    plt.yticks(np.arange(len(labels)), labels)
+    ax.set_xlabel("mavg")
+    plt.xlim(-200, +300)
+    plt.xticks(range(-200, 201, 100))
+    plt.grid(axis='x')
 
 
 def read_data(file):
@@ -107,27 +91,63 @@ def split_and_plot(axis, data, property):
 def plot_all(axis, data):
     # draw entire population
     values = [d['mavg'] for d in data]
-    axis.set_ylabel("mavg")
-    plt.ylim(-200, +200)
-    axis.violinplot(values, widths=0.3)
+    axis.set_xlabel("mavg")
+    plt.xlim(-200, +300)
+    axis.violinplot(values, widths=0.3, showmedians=True, vert=False)
     plt.tick_params(
-        axis='x',
+        axis='y',
         which='both',
-        bottom=False,
         top=False,
+        bottom=False,
+        left=False,
+        right=False,
+        labelleft=False,
         labelbottom=False)
-    plt.yticks(range(-200, 201, 100))
+    #plt.xticks(range(-200, 201, 100))
+    # plt.annotate("n=" + str(len(values)), (1-0.03, 190), annotation_clip=False)
+    plt.text(1-20, 0.85, "n=" + str(len(values)))
     plt.grid(axis='y')
 
+def filter_data(data):
+    filtered = []
+    for d in data:
+        if d['v_mask_param'] == 95:
+            continue
+        if d['t_mask_param'] == 95:
+            continue
+        filtered.append(d)
+    return filtered
+
+#matplotlib.use("pgf")
+matplotlib.rcParams.update({
+    "pgf.texsystem": "xelatex",
+    'font.family': 'serif',
+    'pgf.rcfonts': False,
+    'text.usetex': True,
+})
+
+
+width_inches = 2
+height_inches = width_inches / 2
 
 data = read_data(args.csv)
-fig, axes = plt.subplots(1)
-# plot_all(axes[0], data)
-# split_and_plot(axes[0], data, 'number_fitness_runs')
-# split_and_plot(axes[1], data, 'sigma')
-fig.set_size_inches(6, 3)
-split_and_plot(axes, data, 'mu')
-if args.savefig:
-    fig.savefig(args.savefig)
+# data = filter_data(data)
 
-fig.show()
+def xplotsplit(parameter):
+    fig, axes = plt.subplots(1)
+    if parameter=='all':
+        fig.set_size_inches(width_inches , height_inches )
+        plot_all(axes, data)
+    else:
+        fig.set_size_inches(width_inches, height_inches)
+        split_and_plot(axes, data, parameter)
+    # fig.savefig('hyper_'+parameter+'_unfiltered.pgf')
+    tikzplotlib.clean_figure()
+    tikzplotlib.save(filepath='hyper_'+parameter+'_unfiltered.tex', strict=True,  axis_height='4cm', axis_width='5cm')
+    fig.show()
+
+xplotsplit('all')
+xplotsplit('v_mask_param')
+xplotsplit('w_mask_param')
+xplotsplit('t_mask_param')
+#xplotsplit('mu')
