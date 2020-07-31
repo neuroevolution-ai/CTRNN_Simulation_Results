@@ -1,0 +1,35 @@
+diff --git a/configurations/cma_es_basic.json b/configurations/cma_es_basic.json
+index 4bc2c66..3fb1fe7 100644
+--- a/configurations/cma_es_basic.json
++++ b/configurations/cma_es_basic.json
+@@ -1,15 +1,15 @@
+ {
+   "environment": "BipedalWalker-v3",
+   "random_seed": 0,
+-  "number_generations": 150,
++  "number_generations": 1000,
+   "use_worker_processes": true,
+   "optimizer": {
+     "type": "CMA_ES",
+-    "population_size": 100,
++    "population_size": 1000,
+     "sigma": 1.0,
+     "checkpoint_frequency": 0,
+     "hof_size": 5,
+-    "mu": 25
++    "mu": 100
+   },
+   "brain": {
+     "type": "CTRNN",
+@@ -28,9 +28,9 @@
+     "v_mask": "learned",
+     "v_mask_param": 90,
+     "w_mask": "learned",
+-    "w_mask_param": 80,
++    "w_mask_param": 85,
+     "t_mask": "learned",
+-    "t_mask_param": 90,
++    "t_mask_param": 80,
+     "parameter_perturbations": 0.001
+   },
+   "episode_runner": {
