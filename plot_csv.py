@@ -71,6 +71,7 @@ def read_data(file):
         d['delta_t'] = float(d['delta_t'])
         d['sigma'] = float(d['sigma'])
         d['population_size'] = float(d['population_size'])
+        d['number_neurons'] = float(d['number_neurons'])
         d['number_generations'] = int(d['number_generations'])
         d['v_mask_param'] = int(d['v_mask_param'])
         d['w_mask_param'] = int(d['w_mask_param'])
@@ -106,7 +107,7 @@ def plot_all(axis, data):
     #plt.xticks(range(-200, 201, 100))
     # plt.annotate("n=" + str(len(values)), (1-0.03, 190), annotation_clip=False)
     plt.text(1-20, 0.85, "n=" + str(len(values)))
-    plt.grid(axis='y')
+    plt.grid(axis='x')
 
 def filter_data(data):
     filtered = []
@@ -114,6 +115,17 @@ def filter_data(data):
         if d['v_mask_param'] == 95:
             continue
         if d['t_mask_param'] == 95:
+            continue
+        if d['sigma'] == 2.0:
+            continue
+        if d['mu'] == 250:
+            continue
+        if d['number_fitness_runs'] == 1:
+            continue
+
+        if d['mu'] == 20:
+            continue
+        if d['mu'] == 5:
             continue
         filtered.append(d)
     return filtered
@@ -131,7 +143,7 @@ width_inches = 2
 height_inches = width_inches / 2
 
 data = read_data(args.csv)
-# data = filter_data(data)
+data = filter_data(data)
 
 def xplotsplit(parameter):
     fig, axes = plt.subplots(1)
@@ -143,11 +155,10 @@ def xplotsplit(parameter):
         split_and_plot(axes, data, parameter)
     # fig.savefig('hyper_'+parameter+'_unfiltered.pgf')
     tikzplotlib.clean_figure()
-    tikzplotlib.save(filepath='hyper_'+parameter+'_unfiltered.tex', strict=True,  axis_height='4cm', axis_width='5cm')
+    tikzplotlib.save(filepath='hyper_'+parameter+'_filtered2mu80.tex', strict=True,  axis_height='4cm', axis_width='5cm')
     fig.show()
 
 xplotsplit('all')
-xplotsplit('v_mask_param')
-xplotsplit('w_mask_param')
-xplotsplit('t_mask_param')
-#xplotsplit('mu')
+xplotsplit('mu')
+xplotsplit('sigma')
+# xplotsplit('number_neurons')
