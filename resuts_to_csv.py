@@ -38,7 +38,7 @@ def read_simulations(base_directory):
             # plot_path = os.path.abspath(plot_path)
             plot_path = "=HYPERLINK(\"" + plot_path + "\")"
         else:
-            logging.warn("no plot found")
+            logging.warning("no plot found")
             plot_path = None
 
         sim = {
@@ -118,11 +118,13 @@ logging.basicConfig()
 parser = argparse.ArgumentParser(description='Visualize experiment results')
 parser.add_argument('--dir', metavar='dir', type=str, help='base directory for input',
                     default='data')
-parser.add_argument('--csv', metavar='type', type=str, help='location of output csv file', default='output.csv')
+parser.add_argument('--csv', metavar='type', type=str, help='location of output csv file', default=None)
 args = parser.parse_args()
 
-data = []
+if not args.csv:
+    args.csv = os.path.basename(args.dir) + ".csv"
 
+data = []
 keys = []
 for simulation in read_simulations(args.dir):
     d = gather_info_for_csv(simulation)
