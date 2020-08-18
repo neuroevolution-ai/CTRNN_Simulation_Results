@@ -1,0 +1,39 @@
+diff --git a/configurations/memory_basic_design_space.json b/configurations/memory_basic_design_space.json
+index f6d7b20..ec4408e 100644
+--- a/configurations/memory_basic_design_space.json
++++ b/configurations/memory_basic_design_space.json
+@@ -1,7 +1,7 @@
+ {
+   "environment": "ReacherMemory-v0",
+   "random_seed": 0,
+-  "number_generations": 2500,
++  "number_generations": 250,
+   "use_worker_processes": true,
+   "optimizer": {
+     "type": "CMA_ES",
+@@ -56,4 +56,4 @@
+       "action_frames": 50
+     }
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/neuro_evolution_ctrnn/render_hof.py b/neuro_evolution_ctrnn/render_hof.py
+index c15ce33..6b2908e 100755
+--- a/neuro_evolution_ctrnn/render_hof.py
++++ b/neuro_evolution_ctrnn/render_hof.py
+@@ -28,8 +28,12 @@ class RenderArgs(Tap):
+ args = RenderArgs().parse_args()
+ logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
+ 
+-with open(os.path.join(args.dir, "Log.pkl"), "rb") as read_file_log:
+-    log = pickle.load(read_file_log)
++#with open(os.path.join(args.dir, "Log.pkl"), "rb") as read_file_log:
++    #log = pickle.load(read_file_log)
++
++with open(os.path.join(args.dir, "Log.json"), "rb") as read_file_log:
++    log = json.load(read_file_log)
++
+ with open(os.path.join(args.dir, "Configuration.json"), "r") as read_file:
+     config = config_from_dict( json.load(read_file))
+ 
