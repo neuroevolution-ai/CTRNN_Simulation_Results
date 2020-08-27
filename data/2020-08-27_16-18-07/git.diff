@@ -1,0 +1,100 @@
+diff --git a/configurations/cnn_ctrnn.json b/configurations/cnn_ctrnn.json
+index 267df5b..c0624ff 100644
+--- a/configurations/cnn_ctrnn.json
++++ b/configurations/cnn_ctrnn.json
+@@ -1,7 +1,7 @@
+ {
+   "environment": "QbertNoFrameskip-v4",
+   "random_seed": -1,
+-  "number_generations": 500,
++  "number_generations": 200,
+   "use_worker_processes": true,
+   "optimizer": {
+     "type": "MU_ES",
+@@ -14,8 +14,7 @@
+     "lambda_": 600,
+     "mutpb": 0.8,
+     "efficiency_weight": 0.0,
+-    "fix_seed_for_generation": true
+-  },
++    "fix_seed_for_generation": true  },
+   "brain": {
+     "type": "CNN_CTRNN",
+     "normalize_input": false,
+diff --git a/configurations/procgen.json b/configurations/procgen.json
+index b95db25..38b5143 100644
+--- a/configurations/procgen.json
++++ b/configurations/procgen.json
+@@ -4,21 +4,18 @@
+   "number_generations": 1000,
+   "use_worker_processes": true,
+   "optimizer": {
+-    "type": "MU_ES",
+-    "hof_size": 10,
+-    "checkpoint_frequency": 10,
+-    "initial_gene_range": 2,
+-    "tournsize": 5,
+-    "mu": 30,
+-    "extra_from_hof": 0,
+-    "lambda_": 100,
+-    "mutpb": 0.8,
++    "type": "CMA_ES",
++    "population_size": 500,
++    "sigma": 1.0,
++    "checkpoint_frequency": 0,
++    "hof_size": 5,
++    "mu": 100,
+     "efficiency_weight": 0.0,
+     "fix_seed_for_generation": true
+   },
+   "brain": {
+     "type": "CTRNN",
+-    "number_neurons": 20,
++    "number_neurons": 15,
+     "neuron_activation": "relu",
+     "neuron_activation_inplace": false,
+     "use_bias": true,
+@@ -32,17 +29,17 @@
+     "set_principle_diagonal_elements_of_W_negative": false,
+     "parameter_perturbations": 0.0,
+     "w_mask": "logarithmic",
+-    "w_mask_param": 4,
++    "w_mask_param": 8,
+     "v_mask": "logarithmic",
+-    "v_mask_param": 4,
++    "v_mask_param": 8,
+     "t_mask": "logarithmic",
+     "t_mask_param": 4
+   },
+   "novelty": {
+-    "behavioral_interval": 100,
++    "behavioral_interval": 500,
+     "behavioral_max_length": 10,
+-    "behavior_source": "state",
+-    "distance": "NCD",
++    "behavior_source": "brain",
++    "distance": "euclid",
+     "max_recorded_behaviors": 50,
+     "recorded_behaviors_per_generation": 2,
+     "novelty_nearest_k": 25,
+@@ -53,6 +50,7 @@
+     "reuse_env": true,
+     "max_steps_per_run": 0,
+     "max_steps_penalty": 0,
+-    "keep_env_seed_fixed_during_generation": true
++    "keep_env_seed_fixed_during_generation": true,
++    "use_autoencoder": false
+   }
+ }
+diff --git a/neuro_evolution_ctrnn/brains/CNN_CTRNN.py b/neuro_evolution_ctrnn/brains/CNN_CTRNN.py
+index eb733f2..a02ac3e 100644
+--- a/neuro_evolution_ctrnn/brains/CNN_CTRNN.py
++++ b/neuro_evolution_ctrnn/brains/CNN_CTRNN.py
+@@ -88,7 +88,6 @@ class Cnn(nn.Module):
+             weight = individual[index:index + size]
+             self.conv2.weight = nn.Parameter(torch.from_numpy(weight).view(self.conv2.weight.size()).float())
+ 
+-
+         self.eval()
+ 
+     def forward(self, x: torch.Tensor) -> torch.Tensor:
