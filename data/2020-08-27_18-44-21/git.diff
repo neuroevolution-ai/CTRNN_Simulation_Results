@@ -1,0 +1,138 @@
+diff --git a/configurations/cnn_ctrnn.json b/configurations/cnn_ctrnn.json
+index 267df5b..5fe19b8 100644
+--- a/configurations/cnn_ctrnn.json
++++ b/configurations/cnn_ctrnn.json
+@@ -1,7 +1,7 @@
+ {
+   "environment": "QbertNoFrameskip-v4",
+   "random_seed": -1,
+-  "number_generations": 500,
++  "number_generations": 200,
+   "use_worker_processes": true,
+   "optimizer": {
+     "type": "MU_ES",
+@@ -14,7 +14,8 @@
+     "lambda_": 600,
+     "mutpb": 0.8,
+     "efficiency_weight": 0.0,
+-    "fix_seed_for_generation": true
++    "fix_seed_for_generation": true,
++    "strategy_parameter_per_gene": true
+   },
+   "brain": {
+     "type": "CNN_CTRNN",
+@@ -68,4 +69,4 @@
+     "keep_env_seed_fixed_during_generation": true,
+     "use_autoencoder": false
+   }
+-}
++}
+\ No newline at end of file
+diff --git a/configurations/procgen.json b/configurations/procgen.json
+index b95db25..38b5143 100644
+--- a/configurations/procgen.json
++++ b/configurations/procgen.json
+@@ -4,21 +4,18 @@
+   "number_generations": 1000,
+   "use_worker_processes": true,
+   "optimizer": {
+-    "type": "MU_ES",
+-    "hof_size": 10,
+-    "checkpoint_frequency": 10,
+-    "initial_gene_range": 2,
+-    "tournsize": 5,
+-    "mu": 30,
+-    "extra_from_hof": 0,
+-    "lambda_": 100,
+-    "mutpb": 0.8,
++    "type": "CMA_ES",
++    "population_size": 500,
++    "sigma": 1.0,
++    "checkpoint_frequency": 0,
++    "hof_size": 5,
++    "mu": 100,
+     "efficiency_weight": 0.0,
+     "fix_seed_for_generation": true
+   },
+   "brain": {
+     "type": "CTRNN",
+-    "number_neurons": 20,
++    "number_neurons": 15,
+     "neuron_activation": "relu",
+     "neuron_activation_inplace": false,
+     "use_bias": true,
+@@ -32,17 +29,17 @@
+     "set_principle_diagonal_elements_of_W_negative": false,
+     "parameter_perturbations": 0.0,
+     "w_mask": "logarithmic",
+-    "w_mask_param": 4,
++    "w_mask_param": 8,
+     "v_mask": "logarithmic",
+-    "v_mask_param": 4,
++    "v_mask_param": 8,
+     "t_mask": "logarithmic",
+     "t_mask_param": 4
+   },
+   "novelty": {
+-    "behavioral_interval": 100,
++    "behavioral_interval": 500,
+     "behavioral_max_length": 10,
+-    "behavior_source": "state",
+-    "distance": "NCD",
++    "behavior_source": "brain",
++    "distance": "euclid",
+     "max_recorded_behaviors": 50,
+     "recorded_behaviors_per_generation": 2,
+     "novelty_nearest_k": 25,
+@@ -53,6 +50,7 @@
+     "reuse_env": true,
+     "max_steps_per_run": 0,
+     "max_steps_penalty": 0,
+-    "keep_env_seed_fixed_during_generation": true
++    "keep_env_seed_fixed_during_generation": true,
++    "use_autoencoder": false
+   }
+ }
+diff --git a/neuro_evolution_ctrnn/optimizer/optimizer_mu_lambda.py b/neuro_evolution_ctrnn/optimizer/optimizer_mu_lambda.py
+index fc92c56..4dc55b8 100644
+--- a/neuro_evolution_ctrnn/optimizer/optimizer_mu_lambda.py
++++ b/neuro_evolution_ctrnn/optimizer/optimizer_mu_lambda.py
+@@ -29,7 +29,7 @@ class OptimizerMuPlusLambda(IOptimizer[OptimizerMuLambdaCfg]):
+         toolbox = self.toolbox
+ 
+         if self.conf.strategy_parameter_per_gene:
+-            individual_size *=2
++            individual_size *= 2
+         else:
+             # add two genes for strategy parameters used in mutate
+             individual_size += 2
+@@ -51,9 +51,9 @@ class OptimizerMuPlusLambda(IOptimizer[OptimizerMuLambdaCfg]):
+         def fct_mutation_learned_per_gene(ind1):
+             half = len(ind1) // 2
+             strategy = ind1[half:]
+-            strategy = np.clip(strategy, -3, 3)
+-            # mutate genome with parameters from strategy. and mutate strategy with sigma = 0.5
+-            sigma = np.concatenate(((2 ** strategy), np.ones(len(strategy)) * 0.5), axis=None).tolist()
++            strategy = np.clip(strategy, -10, 3)
++            # mutate genome with parameters from strategy. and mutate strategy with sigma = 0.2
++            sigma = np.concatenate(((2 ** strategy), (2 ** strategy)), axis=None).tolist()
+             return tools.mutGaussian(individual=ind1, mu=0, sigma=sigma, indpb=1.0)
+ 
+         def fct_mutation_learned(ind1):
+@@ -67,15 +67,13 @@ class OptimizerMuPlusLambda(IOptimizer[OptimizerMuLambdaCfg]):
+             return tools.mutGaussian(individual=ind1, mu=0, sigma=sigma, indpb=indpb)
+ 
+         toolbox.register("mate", mate)
+-        toolbox.register("strip_strategy_from_population", self.strip_strategy_from_population,
+-                         mutation_learned=True)
+         if self.conf.strategy_parameter_per_gene:
+             toolbox.register("mutate", fct_mutation_learned_per_gene)
+ 
+         else:
+             toolbox.register("mutate", fct_mutation_learned)
+         toolbox.register("strip_strategy_from_population", self.strip_strategy_from_population,
+-                             mutation_learned=True, strategy_parameter_per_gene=self.conf.strategy_parameter_per_gene)
++                         mutation_learned=True, strategy_parameter_per_gene=self.conf.strategy_parameter_per_gene)
+ 
+         toolbox.register("select", tools.selTournament, tournsize=self.conf.tournsize)
+ 
