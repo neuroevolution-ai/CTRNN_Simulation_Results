@@ -122,11 +122,12 @@ def filter_data(data):
             continue
         if d['number_fitness_runs'] == 1:
             continue
-
-        if d['mu'] == 20:
-            continue
-        if d['mu'] == 5:
-            continue
+        # mu: 20, 10, 5
+        # sigma 0.5, 0.1, 0.02
+        #if d['sigma'] == 0.1:
+        #    continue
+        #if d['sigma'] == 0.02:
+        #    continue
         filtered.append(d)
     return filtered
 
@@ -155,10 +156,10 @@ def xplotsplit(parameter):
         split_and_plot(axes, data, parameter)
     # fig.savefig('hyper_'+parameter+'_unfiltered.pgf')
     tikzplotlib.clean_figure()
-    tikzplotlib.save(filepath='hyper_'+parameter+'_filtered2mu80.tex', strict=True,  axis_height='4cm', axis_width='5cm')
+    tikzplotlib.save(filepath='hyperv2_'+parameter+'_sigma_all.tex', strict=True,  axis_height='4cm', axis_width='5cm')
     fig.show()
 
-xplotsplit('all')
-xplotsplit('mu')
+#xplotsplit('all')
+# xplotsplit('mu')
 xplotsplit('sigma')
 # xplotsplit('number_neurons')
