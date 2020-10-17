@@ -1,0 +1,70 @@
+environment: QbertNoFrameskip-v4
+random_seed: 0
+number_generations: 10
+use_worker_processes: True
+optimizer
+	type: MU_ES
+	hof_size: 10
+	extra_from_hof: 1
+	checkpoint_frequency: 10
+	initial_gene_range: 2
+	tournsize: 0
+	mu: 30
+	lambda_: 10000
+	mutpb: 0.8
+	efficiency_weight: 0
+	fix_seed_for_generation: True
+	strategy_parameter_per_gene: False
+brain
+	type: CTRNN
+	number_neurons: 30
+	delta_t: 0.5
+	normalize_input: False
+	normalize_input_target: 5
+	optimize_state_boundaries: global
+	clipping_range_max: 1.0
+	clipping_range_min: -1.0
+	optimize_y0: True
+	set_principle_diagonal_elements_of_W_negative: True
+	v_mask: logarithmic
+	v_mask_param: 4
+	w_mask: logarithmic
+	w_mask_param: 4
+	t_mask: logarithmic
+	t_mask_param: 2
+	parameter_perturbations: 0.001
+	neuron_activation: relu
+	neuron_activation_inplace: False
+	use_bias: True
+episode_runner
+	keep_env_seed_fixed_during_generation: True
+	number_fitness_runs: 1
+	reuse_env: True
+	max_steps_per_run: 0
+	max_steps_penalty: 0
+	use_autoencoder: False
+	environment_attributes
+		screen_size: 16
+
+Genome Size: 5162
+Inputs: Box(16, 16, 3)
+Outputs: Discrete(6)
+Commit: f65d3cf63f64ef32f9bb3499462d24dbca937a09
+
+
+--------------------------------------------------------------------------------
+gen     nevals      avg             std             min             max             
+--------------------------------------------------------------------------------
+0       10030       47.89           73.28           0.00            3000.00         
+1       10030       68.42           192.57          0.00            6000.00         
+2       10030       122.91          612.91          0.00            6000.00         
+3       10030       566.94          1609.09         0.00            6025.00         
+4       10030       829.66          2017.71         0.00            6025.00         
+5       10030       699.25          1812.98         0.00            6050.00         
+6       10030       911.34          1815.45         0.00            19500.00        
+7       10030       763.87          2084.59         0.00            19500.00        
+8       10030       3689.36         7462.86         0.00            19500.00        
+9       10030       3835.12         7660.97         0.00            19500.00        
+10      10030       4035.03         7852.24         0.00            19500.00        
+
+Time elapsed: 1.8263 seconds
