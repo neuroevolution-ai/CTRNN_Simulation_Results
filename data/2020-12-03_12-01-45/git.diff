@@ -1,0 +1,159 @@
+diff --git a/configurations/procgen.json b/configurations/procgen.json
+index 58c252b..b965fe5 100644
+--- a/configurations/procgen.json
++++ b/configurations/procgen.json
+@@ -1,7 +1,7 @@
+ {
+   "environment": "procgen:procgen-heist-v0",
+-  "random_seed": 0,
+-  "number_generations": 1000,
++  "random_seed": -1,
++  "number_generations": 100,
+   "use_worker_processes": true,
+   "optimizer": {
+     "type": "MU_ES",
+@@ -9,9 +9,9 @@
+     "checkpoint_frequency": 10,
+     "initial_gene_range": 2,
+     "tournsize": 5,
+-    "mu": 300,
++    "mu": 10,
+     "extra_from_hof": 1,
+-    "lambda_": 600,
++    "lambda_": 30,
+     "mutpb": 0.8,
+     "efficiency_weight": 0.0,
+     "fix_seed_for_generation": true,
+@@ -27,11 +27,11 @@
+       "normalize_input": false,
+       "normalize_input_target": 0.0,
+       "use_bias": false,
+-      "conv_size1": 3,
++      "conv_size1": 5,
+       "conv_feat1": 5,
+       "maxp_size1": 4,
+-      "maxp_stride1": 2,
+-      "conv_size2": 3,
++      "maxp_stride1": 4,
++      "conv_size2": 5,
+       "conv_feat2": 5,
+       "maxp_size2": 4,
+       "maxp_stride2": 1
+@@ -59,22 +59,9 @@
+       "t_mask_param": 4
+     }
+   },
+-  "novelty": {
+-    "behavioral_interval": 500,
+-    "behavioral_max_length": 10,
+-    "behavior_source": "brain",
+-    "distance": "euclid",
+-    "max_recorded_behaviors": 50,
+-    "recorded_behaviors_per_generation": 2,
+-    "novelty_nearest_k": 25,
+-    "novelty_weight": 0.1
+-  },
+   "episode_runner": {
+-    "number_fitness_runs": 3,
++    "number_fitness_runs": 5,
+     "reuse_env": true,
+-    "max_steps_per_run": 0,
+-    "max_steps_penalty": 0,
+-    "keep_env_seed_fixed_during_generation": true,
+-    "use_autoencoder": false
++    "keep_env_seed_fixed_during_generation": true
+   }
+ }
+diff --git a/neuro_evolution_ctrnn/tools/env_handler.py b/neuro_evolution_ctrnn/tools/env_handler.py
+index c1301ec..dc89dcc 100644
+--- a/neuro_evolution_ctrnn/tools/env_handler.py
++++ b/neuro_evolution_ctrnn/tools/env_handler.py
+@@ -33,12 +33,7 @@ class EnvHandler:
+                 action_frames=self.config.environment_attributes.action_frames)
+         elif env_id.startswith("procgen"):
+             logging.info("initiating procgen with memory")
+-            env = gym.make(env_id,
+-                           distribution_mode="memory",
+-                           use_monochrome_assets=False,
+-                           restrict_themes=True,
+-                           use_backgrounds=False)
+-            env = ProcEnvWrapper(env)
++            env = ProcEnvWrapper(env_id)
+         elif env_id == 'QbertHard-v0':
+             logging.info("wrapping QbertNoFrameskip-v4 in QbertGlitchlessWrapper")
+             env = QbertGlitchlessWrapper(gym.make('QbertNoFrameskip-v4'))
+@@ -78,7 +73,6 @@ class EnvHandler:
+                                          terminal_on_life_loss=self.config.environment_attributes.terminal_on_life_loss,
+                                          grayscale_obs=self.config.environment_attributes.grayscale_obs)
+ 
+-
+         if str(env_id).startswith("BipedalWalker"):
+             logging.info("wrapping env in Box2DWalkerWrapper")
+             env = Box2DWalkerWrapper(env)
+@@ -98,17 +92,34 @@ class EnvHandler:
+ 
+ 
+ class ProcEnvWrapper(Wrapper):
+-
+-    def __init__(self, env):
+-        super(ProcEnvWrapper, self).__init__(env)
+-        self.screen_size = 32
++    """
++    This Wrapper scales to observation to values between 0 and 1.
++    Additionally it implements a seed method because for reasons unknown it not implemented upstream
++    """
++
++    def __init__(self, env_id):
++        self.env_id = env_id
++        super(ProcEnvWrapper, self).__init__(self._make_inner_env(start_level=0))
+         self.obs_dtype = np.float16
++        self.input_high = 255
++        assert self.input_high == self.env.observation_space.high.min(), "unexpected bounds for input space"
++        assert self.input_high == self.env.observation_space.high.max(), "unexpected bounds for input space"
++        assert 0 == self.env.observation_space.low.min(), "unexpected bounds for input space"
++        assert 0 == self.env.observation_space.low.max(), "unexpected bounds for input space"
+         self.observation_space = Box(low=0, high=1,
+-                                     shape=(self.screen_size, self.screen_size, 3),
++                                     shape=self.env.observation_space.shape,
+                                      dtype=self.obs_dtype)
+ 
++    def _make_inner_env(self, start_level):
++        return gym.make(self.env_id,
++                        distribution_mode="memory",
++                        use_monochrome_assets=False,
++                        restrict_themes=True,
++                        use_backgrounds=False,
++                        num_levels=0,
++                        start_level=start_level)
++
+     def _transform_ob(self, ob):
+-        ob = cv2.resize(ob, (self.screen_size, self.screen_size), interpolation=cv2.INTER_AREA)
+         return np.asarray(ob, dtype=self.obs_dtype) / 255.0
+ 
+     def step(self, action):
+@@ -118,6 +129,10 @@ class ProcEnvWrapper(Wrapper):
+     def reset(self):
+         return self._transform_ob(super(ProcEnvWrapper, self).reset())
+ 
++    def seed(self, seed=0):
++        self.env = self._make_inner_env(start_level=seed)
++
++
+ 
+ class MaxStepWrapper(Wrapper):
+     def __init__(self, env, max_steps, penalty):
+diff --git a/neuro_evolution_ctrnn/tools/helper.py b/neuro_evolution_ctrnn/tools/helper.py
+index d8674b3..f869d1a 100644
+--- a/neuro_evolution_ctrnn/tools/helper.py
++++ b/neuro_evolution_ctrnn/tools/helper.py
+@@ -160,10 +160,6 @@ def set_random_seeds(seed, env):
+     np.random.seed(seed)
+     torch.manual_seed(seed)
+     if env:
+-        if env.spec.id.startswith('procgen'):
+-            # setting random seeds is not supported with procgen. So instead we need to make a new env
+-            # https://github.com/openai/procgen/issues/21
+-            logging.error("setting random seeds with procgen is not supported")
+         env.seed(seed)
+         env.action_space.seed(seed)
+ 
