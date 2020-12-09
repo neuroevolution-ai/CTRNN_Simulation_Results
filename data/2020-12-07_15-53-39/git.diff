@@ -1,0 +1,25 @@
+diff --git a/configurations/procgen.json b/configurations/procgen.json
+index b965fe5..be7e86b 100644
+--- a/configurations/procgen.json
++++ b/configurations/procgen.json
+@@ -1,17 +1,17 @@
+ {
+   "environment": "procgen:procgen-heist-v0",
+   "random_seed": -1,
+-  "number_generations": 100,
++  "number_generations": 1000,
+   "use_worker_processes": true,
+   "optimizer": {
+     "type": "MU_ES",
+     "hof_size": 10,
+     "checkpoint_frequency": 10,
+     "initial_gene_range": 2,
+-    "tournsize": 5,
++    "tournsize": 0,
+     "mu": 10,
+     "extra_from_hof": 1,
+-    "lambda_": 30,
++    "lambda_": 500,
+     "mutpb": 0.8,
+     "efficiency_weight": 0.0,
+     "fix_seed_for_generation": true,
