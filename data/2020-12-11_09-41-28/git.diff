@@ -1,0 +1,20 @@
+diff --git a/configurations/procgen.json b/configurations/procgen.json
+index b5ee1dd..cdef2d3 100644
+--- a/configurations/procgen.json
++++ b/configurations/procgen.json
+@@ -1,7 +1,7 @@
+ {
+   "environment": "procgen:procgen-heist-v0",
+   "random_seed": -1,
+-  "number_generations": 100,
++  "number_generations": 500,
+   "optimizer": {
+     "type": "MU_ES",
+     "hof_size": 10,
+@@ -65,4 +65,4 @@
+     "reuse_env": true,
+     "keep_env_seed_fixed_during_generation": true
+   }
+-}
+\ No newline at end of file
++}
