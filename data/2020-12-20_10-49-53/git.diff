@@ -1,0 +1,77 @@
+diff --git a/neuro_evolution_ctrnn/optimizer/optimizer_cma_es.py b/neuro_evolution_ctrnn/optimizer/optimizer_cma_es.py
+index be5e947..342ef17 100644
+--- a/neuro_evolution_ctrnn/optimizer/optimizer_cma_es.py
++++ b/neuro_evolution_ctrnn/optimizer/optimizer_cma_es.py
+@@ -28,7 +28,7 @@ class OptimizerCmaEs(IOptimizer[OptimizerCmaEsCfg]):
+             # todo: DRY. Some parts of this are also in the other optimizer, and can be moved to the parent class
+             cp = get_checkpoint(from_checkoint)
+             toolbox.initial_generation = cp["generation"] + 1
+-            if not self.reset_hof:
++            if not reset_hof:
+                 self.hof = cp["halloffame"]
+             toolbox.recorded_individuals = cp["recorded_individuals"]
+             toolbox.logbook = cp["logbook"]
+diff --git a/neuro_evolution_ctrnn/optimizer/optimizer_mu_lambda.py b/neuro_evolution_ctrnn/optimizer/optimizer_mu_lambda.py
+index 8b49bc1..260bac5 100644
+--- a/neuro_evolution_ctrnn/optimizer/optimizer_mu_lambda.py
++++ b/neuro_evolution_ctrnn/optimizer/optimizer_mu_lambda.py
+@@ -89,7 +89,7 @@ class OptimizerMuPlusLambda(IOptimizer[OptimizerMuLambdaCfg]):
+             toolbox.logbook = cp["logbook"]
+             toolbox.recorded_individuals = cp["recorded_individuals"]
+ 
+-            if not self.reset_hof:
++            if not reset_hof:
+                 toolbox.hof = self.hof = cp["halloffame"]
+         else:
+             toolbox.initial_generation = 0
+diff --git a/neuro_evolution_ctrnn/render_hof.py b/neuro_evolution_ctrnn/render_hof.py
+index 65c4cd5..0fc716f 100755
+--- a/neuro_evolution_ctrnn/render_hof.py
++++ b/neuro_evolution_ctrnn/render_hof.py
+@@ -18,7 +18,6 @@ class RenderArgs(Tap):
+     no_render: bool = False  # disable rendering to screen?
+     record: bool = False  # record rendering to store it to file?
+     record_force: bool = False  # force rendering even if file exists
+-    description = "Visualize Experiments"
+     neuron_vis: bool = False  # show neuron visualizer?
+     hof: int = 1  # how many members of hall-of-fame should be shown?
+     rounds: int = 1  # how many episodes should be shown per HOF-member?
+@@ -26,8 +25,15 @@ class RenderArgs(Tap):
+     neuron_vis_width: int = 1600  # how wide should the neuron_vis window be?
+     neuron_vis_height: int = 900  # how high should the neuron_vis window be?
+ 
++    def configure(self):
++        self.description = 'Visualize Experiments'
++        # positional argument:
++        self.add_argument('dir')
+ 
+-args = RenderArgs().parse_args()
++        return self
++
++
++args = RenderArgs(underscores_to_dashes=True).parse_args()
+ logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
+ try:
+     with open(os.path.join(args.dir, "Log.pkl"), "rb") as read_file_log:
+@@ -35,7 +41,7 @@ try:
+ except:
+     with open(os.path.join(args.dir, "Log.json"), "r") as read_file_log:
+         log = json.load(read_file_log)
+-        
++
+ config = ConfigReader.config_from_file(os.path.join(args.dir, "Configuration.json"))
+ 
+ experiment = Experiment(configuration=config,
+diff --git a/neuro_evolution_ctrnn/train.py b/neuro_evolution_ctrnn/train.py
+index bdba481..0e45bd5 100644
+--- a/neuro_evolution_ctrnn/train.py
++++ b/neuro_evolution_ctrnn/train.py
+@@ -51,7 +51,7 @@ if __name__ == "__main__":  # pragma: no cover
+                             processing_framework=args.processing_framework,
+                             number_of_workers=args.num_workers,
+                             reset_hof=args.reset_hof,
+-                            ncheckpoint_to_result=args.checkpoint_to_result)
++                            checkpoint_to_result=args.checkpoint_to_result)
+ 
+     os.mkdir(args.result_path)
+     experiment.run()
