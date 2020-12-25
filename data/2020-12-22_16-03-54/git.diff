@@ -1,0 +1,49 @@
+diff --git a/configurations/procgen.json b/configurations/procgen.json
+index 0e0a09e..cefe0a3 100644
+--- a/configurations/procgen.json
++++ b/configurations/procgen.json
+@@ -1,16 +1,16 @@
+ {
+   "environment": "procgen:procgen-heist-v0",
+   "random_seed": -1,
+-  "number_generations": 200,
++  "number_generations": 500,
+   "optimizer": {
+     "type": "MU_ES",
+     "hof_size": 10,
+     "checkpoint_frequency": 10,
+     "initial_gene_range": 2,
+     "tournsize": 0,
+-    "mu": 10,
+-    "extra_from_hof": 1,
+-    "lambda_": 500,
++    "mu": 30,
++    "extra_from_hof": 0,
++    "lambda_": 1000,
+     "mutpb": 0.8,
+     "efficiency_weight": 0.0,
+     "fix_seed_for_generation": true,
+@@ -58,10 +58,21 @@
+       "t_mask_param": 4
+     }
+   },
++
++  "novelty": {
++    "behavioral_interval": -1,
++    "behavioral_max_length": -1,
++    "behavior_source": "observation",
++    "distance": "euclid",
++    "max_recorded_behaviors": 200,
++    "recorded_behaviors_per_generation": 5,
++    "novelty_nearest_k": 180,
++    "novelty_weight": 0.2
++  },
+   "episode_runner": {
+-    "number_fitness_runs": 20,
++    "number_fitness_runs": 10,
+     "max_steps_per_run": 100,
+-    "reuse_env": false,
++    "reuse_env": true,
+     "keep_env_seed_fixed_during_generation": true
+   }
+ }
