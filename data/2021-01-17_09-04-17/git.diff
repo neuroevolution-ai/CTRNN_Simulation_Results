@@ -1,0 +1,28 @@
+diff --git a/configurations/procgen.json b/configurations/procgen.json
+index a7f0856..72b6a58 100644
+--- a/configurations/procgen.json
++++ b/configurations/procgen.json
+@@ -1,6 +1,6 @@
+ {
+   "environment": "procgen:procgen-heist-v0",
+-  "random_seed": -1,
++  "random_seed": 0,
+   "number_generations": 200,
+   "optimizer": {
+     "type": "MU_ES",
+@@ -59,12 +59,12 @@
+     }
+   },
+   "episode_runner": {
+-    "number_fitness_runs": 20,
+-    "max_steps_per_run": 100,
+-    "reuse_env": false,
++    "number_fitness_runs": 5,
++    "reuse_env": true,
+     "keep_env_seed_fixed_during_generation": true,
+     "environment_attributes": {
+       "type": "ProcGenAttr"
+     }
+   }
+ }
++
