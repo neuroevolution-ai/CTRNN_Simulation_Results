@@ -61,6 +61,9 @@
     "episode_runner": {
         "number_fitness_runs": 5,
         "reuse_env": true,
-        "keep_env_seed_fixed_during_generation": true
+        "keep_env_seed_fixed_during_generation": true,
+    "environment_attributes": {
+      "type": "ProcGenAttr"
+    }
     }
 }
