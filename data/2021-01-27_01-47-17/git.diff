@@ -1,0 +1,32 @@
+diff --git a/configurations/procgen.json b/configurations/procgen.json
+index a7f0856..848eda1 100644
+--- a/configurations/procgen.json
++++ b/configurations/procgen.json
+@@ -8,9 +8,9 @@
+     "checkpoint_frequency": 10,
+     "initial_gene_range": 2,
+     "tournsize": 0,
+-    "mu": 10,
++    "mu": 50,
+     "extra_from_hof": 1,
+-    "lambda_": 500,
++    "lambda_": 5000,
+     "mutpb": 0.8,
+     "efficiency_weight": 0.0,
+     "fix_seed_for_generation": true,
+@@ -59,12 +59,13 @@
+     }
+   },
+   "episode_runner": {
+-    "number_fitness_runs": 20,
++    "number_fitness_runs": 3,
++    "reuse_env": true,
+     "max_steps_per_run": 100,
+-    "reuse_env": false,
+     "keep_env_seed_fixed_during_generation": true,
+     "environment_attributes": {
+       "type": "ProcGenAttr"
+     }
+   }
+ }
++
