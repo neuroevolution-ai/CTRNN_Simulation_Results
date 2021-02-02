@@ -1,0 +1,47 @@
+{
+    "environment": "procgen:procgen-heist-v0",
+    "random_seed": -1,
+    "number_generations": 200,
+    "optimizer": {
+        "type": "CMA_ES",
+        "population_size": 5000,
+        "sigma": 1.0,
+        "checkpoint_frequency": 10,
+        "hof_size": 10,
+        "mu": 50,
+        "efficiency_weight": 0.0,
+        "fix_seed_for_generation": true
+    },
+    "brain": {
+        "type": "CTRNN",
+        "number_neurons": 15,
+        "neuron_activation": "relu",
+        "neuron_activation_inplace": false,
+        "use_bias": true,
+        "delta_t": 0.05,
+        "normalize_input": false,
+        "normalize_input_target": 2,
+        "optimize_state_boundaries": "global",
+        "clipping_range_max": 1.0,
+        "clipping_range_min": -1.0,
+        "optimize_y0": false,
+        "set_principle_diagonal_elements_of_W_negative": false,
+        "parameter_perturbations": 0.0,
+        "w_mask": "logarithmic",
+        "w_mask_param": 8,
+        "v_mask": "logarithmic",
+        "v_mask_param": 8,
+        "t_mask": "logarithmic",
+        "t_mask_param": 4
+    },
+    "episode_runner": {
+        "number_fitness_runs": 3,
+        "reuse_env": true,
+        "max_steps_per_run": 100,
+        "keep_env_seed_fixed_during_generation": true,
+        "environment_attributes": {
+            "type": "ProcGenAttr",
+            "screen_size": 16
+        }
+    }
+}
