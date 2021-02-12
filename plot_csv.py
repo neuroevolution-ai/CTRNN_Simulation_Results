@@ -1,13 +1,10 @@
-import os
-import json
 import argparse
-import logging
 import csv
-import pickle
-import numpy as np
+import logging
 
-import matplotlib.pyplot as plt
 import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
 import tikzplotlib
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
@@ -42,11 +39,11 @@ def violinplot(data, ax, title, prop_name):
     labels = [x[0] for x in data]
     positions = range(len(values))
     ax.violinplot(values, positions=positions, widths=0.7, showmedians=True, vert=False)
-    for v,p in zip(values, positions):
+    for v, p in zip(values, positions):
         # plt.annotate("n=" + str(len(v)), (p-0.1, 178), annotation_clip=False)
         # plt.text(200, (p/len(positions))+0.1, "n=" + str(len(v)), transform=ax.get_xaxis_transform())
-        plt.text(max(v)+5, p-0.1, "\scriptsize n=" + str(len(v)), fontsize=6)
-        ax.scatter(x=v, y=[p]*len(v), s=[100]*len(v), marker="|", color='#ff9900', alpha=0.3)
+        plt.text(max(v) + 5, p - 0.1, "\scriptsize n=" + str(len(v)), fontsize=6)
+        ax.scatter(x=v, y=[p] * len(v), s=[100] * len(v), marker="|", color='#ff9900', alpha=0.3)
 
     ax.set_ylabel(prop_name.replace('_', ' '))
     ax.legend(loc='best')
@@ -58,7 +55,6 @@ def violinplot(data, ax, title, prop_name):
 
 
 def read_data(file):
-
     with open(file, 'r') as f:
         reader = csv.DictReader(f)
         print(reader.fieldnames)
@@ -79,15 +75,17 @@ def read_data(file):
         d['number_fitness_runs'] = int(d['number_fitness_runs'])
         if d['mu'] == 0:
             # when 0 is used, it defaults to half the population
-            d['mu'] = int(d['population_size']/2)
+            d['mu'] = int(d['population_size'] / 2)
     return data
+
 
 def split_and_plot(axis, data, property):
     splitted = split_into_buckets(data, property)
     splitted = sorted(splitted, key=lambda x: x[0])
     all = []
     for x in splitted: all.append(x)
-    violinplot(splitted,axis, "asd", property)
+    violinplot(splitted, axis, "asd", property)
+
 
 def plot_all(axis, data):
     # draw entire population
@@ -104,10 +102,11 @@ def plot_all(axis, data):
         right=False,
         labelleft=False,
         labelbottom=False)
-    #plt.xticks(range(-200, 201, 100))
+    # plt.xticks(range(-200, 201, 100))
     # plt.annotate("n=" + str(len(values)), (1-0.03, 190), annotation_clip=False)
-    plt.text(1-20, 0.85, "n=" + str(len(values)))
+    plt.text(1 - 20, 0.85, "n=" + str(len(values)))
     plt.grid(axis='x')
+
 
 def filter_data(data):
     filtered = []
@@ -124,14 +123,15 @@ def filter_data(data):
             continue
         # mu: 20, 10, 5
         # sigma 0.5, 0.1, 0.02
-        #if d['sigma'] == 0.1:
+        # if d['sigma'] == 0.1:
         #    continue
-        #if d['sigma'] == 0.02:
+        # if d['sigma'] == 0.02:
         #    continue
         filtered.append(d)
     return filtered
 
-#matplotlib.use("pgf")
+
+# matplotlib.use("pgf")
 matplotlib.rcParams.update({
     "pgf.texsystem": "xelatex",
     'font.family': 'serif',
@@ -139,27 +139,29 @@ matplotlib.rcParams.update({
     'text.usetex': True,
 })
 
-
 width_inches = 2
 height_inches = width_inches / 2
 
 data = read_data(args.csv)
 data = filter_data(data)
 
+
 def xplotsplit(parameter):
     fig, axes = plt.subplots(1)
-    if parameter=='all':
-        fig.set_size_inches(width_inches , height_inches )
+    if parameter == 'all':
+        fig.set_size_inches(width_inches, height_inches)
         plot_all(axes, data)
     else:
         fig.set_size_inches(width_inches, height_inches)
         split_and_plot(axes, data, parameter)
     # fig.savefig('hyper_'+parameter+'_unfiltered.pgf')
     tikzplotlib.clean_figure()
-    tikzplotlib.save(filepath='hyperv2_'+parameter+'_sigma_all.tex', strict=True,  axis_height='4cm', axis_width='5cm')
+    tikzplotlib.save(filepath='hyperv2_' + parameter + '_sigma_all.tex', strict=True, axis_height='4cm',
+                     axis_width='5cm')
     fig.show()
 
-#xplotsplit('all')
+
+# xplotsplit('all')
 # xplotsplit('mu')
 xplotsplit('sigma')
 # xplotsplit('number_neurons')
