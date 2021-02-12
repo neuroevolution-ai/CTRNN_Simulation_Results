@@ -1,8 +1,8 @@
-import os
-import json
 import argparse
-import logging
 import csv
+import json
+import logging
+import os
 import pickle
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
