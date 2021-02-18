@@ -1,0 +1,31 @@
+{
+    "environment": "ReacherMemory-v0",
+    "random_seed": 0,
+    "number_generations": 20000,
+    "optimizer": {
+        "type": "CMA_ES",
+        "sigma": 1.0,
+        "mu": 25,
+        "population_size": 100
+    },
+    "brain": {
+        "type": "CTRNN",
+        "number_neurons": 8,
+        "neuron_activation": "tanh",
+        "use_bias": false,
+        "delta_t": 0.05,
+        "optimize_state_boundaries": "global",
+        "clipping_range_max": 1.0,
+        "clipping_range_min": -1.0,
+        "optimize_initial_neuron_state": true
+    },
+    "episode_runner": {
+        "number_fitness_runs": 25,
+        "environment_attributes": {
+            "type": "ReacherMemoryAttr",
+            "observation_frames": 20,
+            "memory_frames": 20,
+            "action_frames": 50
+        }
+    }
+}
