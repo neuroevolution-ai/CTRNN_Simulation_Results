@@ -1,0 +1,38 @@
+{
+    "environment": "ReacherMemory-v0",
+    "random_seed": 0,
+    "number_generations": 3000,
+    "optimizer": {
+        "type": "MU_ES",
+        "hof_size": 10,
+        "initial_gene_range": 2,
+        "tournsize": 5,
+        "mu": 500,
+        "extra_from_hof": 1,
+        "lambda_": 1200,
+        "mutpb": 0.8,
+        "efficiency_weight": 0.0,
+        "fix_seed_for_generation": true,
+        "strategy_parameter_per_gene": false
+    },
+    "brain": {
+        "type": "CTRNN",
+        "number_neurons": 50,
+        "neuron_activation": "tanh",
+        "use_bias": false,
+        "delta_t": 0.05,
+        "optimize_state_boundaries": "fixed",
+        "clipping_range_max": 1.0,
+        "clipping_range_min": -1.0,
+        "optimize_initial_neuron_state": true
+    },
+    "episode_runner": {
+        "number_fitness_runs": 25,
+        "environment_attributes": {
+            "type": "ReacherMemoryAttr",
+            "observation_frames": 20,
+            "memory_frames": 20,
+            "action_frames": 50
+        }
+    }
+}
